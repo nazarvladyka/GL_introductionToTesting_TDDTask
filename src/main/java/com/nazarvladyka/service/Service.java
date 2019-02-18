@@ -1,7 +1,9 @@
+package com.nazarvladyka.service;
+
 import java.util.ArrayList;
 
 public class Service {
-    public ArrayList<Integer> choseNumbersFromListEqualsToNumber(ArrayList<Integer> inputList, int sumOfResultList) {
+    public ArrayList<Integer> chooseNumbersFromListEqualsToNumber(ArrayList<Integer> inputList, int number) {
         ArrayList<Integer> resultList = new ArrayList();
 
         resultList.add(8);

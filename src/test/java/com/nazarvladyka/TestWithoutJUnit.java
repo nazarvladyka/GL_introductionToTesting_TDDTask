@@ -1,7 +1,11 @@
+package com.nazarvladyka;
+
+import com.nazarvladyka.service.Service;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MainTest {
+public class TestWithoutJUnit {
     public static void main(String[] args) {
         testChoseNumbersFromListEqualsToNumber();
     }
@@ -10,7 +14,7 @@ public class MainTest {
         Service service = new Service();
 
         ArrayList<Integer> testList = new ArrayList<Integer>(Arrays.asList(1, 2, 3, 4, 5));
-        ArrayList<Integer> resultList = service.choseNumbersFromListEqualsToNumber(testList, 8);
+        ArrayList<Integer> resultList = service.chooseNumbersFromListEqualsToNumber(testList, 8);
 
         if(resultList.equals(Arrays.asList(5, 8))) {
             System.out.println("All good");
