@@ -1,14 +1,77 @@
 package com.nazarvladyka.service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Service {
-    public ArrayList<Integer> chooseNumbersFromListEqualsToNumber(ArrayList<Integer> inputList, int number) {
-        ArrayList<Integer> resultList = new ArrayList();
+    public LinkedList<Integer> chooseNumbersFromListEqualsToNumber(ArrayList<Integer> inputList, int number) {
+        LinkedList<Integer> resultList = new LinkedList();
 
-        resultList.add(8);
-        resultList.add(5);
+        //in case when sum of element are not enough
+        int sumOfInputList = 0;
+        for (Integer x : inputList) { sumOfInputList += x; }
+        if (sumOfInputList < number) {
+            resultList.add(0);
+            return resultList;
+        }
 
+        //method wish quick cycle
+        LinkedList<Integer> resultListWithQuickSearch = new LinkedList<>();
+        LinkedList<Integer> inputListForQuickSearch = new LinkedList<>(inputList);
+
+        int indexOfElementWithMinDifference;
+        int minDifference = number;
+        int difference = number;
+        int sum = 0;
+        boolean isThereAreNotSmallestNumberThatDifference = false;
+
+        while(sum != number && !isThereAreNotSmallestNumberThatDifference) {
+            indexOfElementWithMinDifference = 0;
+
+            for (Integer x : inputListForQuickSearch) {
+                if (x > difference) {
+                    isThereAreNotSmallestNumberThatDifference = true;
+                } else {
+                    isThereAreNotSmallestNumberThatDifference = false;
+                    break;
+                }
+            }
+
+            if(!isThereAreNotSmallestNumberThatDifference) {
+                for (Integer x : inputListForQuickSearch) {
+                    minDifference = difference - inputListForQuickSearch.get(indexOfElementWithMinDifference);
+                    if ((difference - x) < 0) {
+                        continue;
+                    }
+                    if (minDifference == 0) {
+                        break;
+                    } else if ((difference - x) < minDifference) {
+                        indexOfElementWithMinDifference = inputListForQuickSearch.indexOf(x);
+                    }
+                }
+
+
+                resultListWithQuickSearch.add(inputListForQuickSearch.get(indexOfElementWithMinDifference));
+                inputListForQuickSearch.remove(indexOfElementWithMinDifference);
+                //add all elements in list to sum
+                sum += resultListWithQuickSearch.getLast();
+                difference = number - sum;
+            } else {
+                resultListWithQuickSearch.removeAll(resultListWithQuickSearch);
+                resultListWithQuickSearch.add(0);
+            }
+        }
+// in case when first method didn`t find needed list
+        if (resultListWithQuickSearch.contains(0)) {
+            LinkedList<Integer> resultListWithEveryoneWithEveryone = new LinkedList<>();
+            LinkedList<Integer> inputListForEveryoneWithEveryone = new LinkedList<>(inputList);
+
+            
+
+        }
+
+
+        resultList = resultListWithQuickSearch;
         return resultList;
     }
 }
