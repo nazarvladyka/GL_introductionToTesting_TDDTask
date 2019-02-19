@@ -1,35 +1,45 @@
 package com.nazarvladyka.service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 
 public class Service {
-    public LinkedList<Integer> chooseNumbersFromListEqualsToNumber(ArrayList<Integer> inputList, int number) {
-        LinkedList<Integer> resultList = new LinkedList();
+    public LinkedList<Integer> chooseNumbersFromListEqualsToNumber(LinkedList<Integer> inputList, int searchedSum) {
+        LinkedList<Integer> resultList = new LinkedList<>();
 
         //in case when sum of element are not enough
         int sumOfInputList = 0;
         for (Integer x : inputList) { sumOfInputList += x; }
-        if (sumOfInputList < number || number == 0) {
+        if (sumOfInputList < searchedSum || searchedSum == 0) {
             resultList.add(0);
             return resultList;
         }
 
-        //method wish quick cycle
-        LinkedList<Integer> resultListWithQuickSearch = new LinkedList<>();
-        LinkedList<Integer> inputListForQuickSearch = new LinkedList<>(inputList);
+        LinkedList<Integer> resultWithQuickSearch = quickSearch(inputList, searchedSum);
+        LinkedList<Integer> resultEveryoneWithEveryone = everyoneWithEveryone(inputList, searchedSum);
 
-        int indexOfElementWithMinDifference;
-        int minDifference = number;
-        int difference = number;
+        if (resultWithQuickSearch.indexOf(0) == 0) {
+            resultList = resultEveryoneWithEveryone;
+        } else {
+            resultList = resultWithQuickSearch;
+        }
+
+        return resultList;
+    }
+
+    private LinkedList<Integer> quickSearch(LinkedList<Integer> inputList, int searchedSum) {
+        LinkedList<Integer> outputList = new LinkedList<>();
+
+        int difference = searchedSum;
+        int elementIndexClosestToDifference;
+        int minDifference = searchedSum;
         int sum = 0;
         boolean isThereAreNotSmallestNumberThatDifference = false;
 
-        while(sum != number && !isThereAreNotSmallestNumberThatDifference) {
-            indexOfElementWithMinDifference = 0;
+        while(sum != searchedSum && !isThereAreNotSmallestNumberThatDifference) {
+            elementIndexClosestToDifference = 0;
 
-            for (Integer x : inputListForQuickSearch) {
+            for (Integer x : inputList) {
                 if (x > difference) {
                     isThereAreNotSmallestNumberThatDifference = true;
                 } else {
@@ -39,71 +49,58 @@ public class Service {
             }
 
             if(!isThereAreNotSmallestNumberThatDifference) {
-                for (Integer x : inputListForQuickSearch) {
-                    minDifference = difference - inputListForQuickSearch.get(indexOfElementWithMinDifference);
-                    if ((difference - x) < 0) {
-                        continue;
-                    }
-                    if (minDifference == 0) {
-                        break;
-                    } else if ((difference - x) < minDifference) {
-                        indexOfElementWithMinDifference = inputListForQuickSearch.indexOf(x);
+                for (Integer elem : inputList) {
+                    if (minDifference == 0) { break; }
+                    if ((difference - elem) < 0) { continue; }
+                    if ((difference - elem) < minDifference) {
+                        elementIndexClosestToDifference = inputList.indexOf(elem);
+                        minDifference = difference - inputList.get(elementIndexClosestToDifference);
                     }
                 }
 
-                resultListWithQuickSearch.add(inputListForQuickSearch.get(indexOfElementWithMinDifference));
-                inputListForQuickSearch.remove(indexOfElementWithMinDifference);
+                outputList.add(inputList.get(elementIndexClosestToDifference));
+                inputList.remove(elementIndexClosestToDifference);
                 //add all elements in list to sum
-                sum += resultListWithQuickSearch.getLast();
-                difference = number - sum;
+                sum += outputList.getLast();
+                difference = searchedSum - sum;
             } else {
-                resultListWithQuickSearch.removeAll(resultListWithQuickSearch);
-                resultListWithQuickSearch.add(0);
+                outputList.clear();
+                outputList.add(0);
             }
         }
-// in case when first method didn't find needed list
-        if (resultListWithQuickSearch.size() == 1 && resultListWithQuickSearch.contains(0)) {
-            LinkedList<Integer> resultListWithEveryoneWithEveryone = new LinkedList<>();
-            LinkedList<Integer> inputListForEveryoneWithEveryone = new LinkedList<>(inputList);
+        return outputList;
+    }
 
-            sum = 0;
-            difference = number;
-            //if there are numbers bigger that our number
-            for (int i = 0; i < inputListForEveryoneWithEveryone.size(); i++) {
-                if (inputListForEveryoneWithEveryone.get(i) > number) {
-                    inputListForEveryoneWithEveryone.remove(i);
-                    i--;
-                }
+    private LinkedList<Integer> everyoneWithEveryone(LinkedList<Integer> inputList, int searchedSum) {
+        LinkedList<Integer> outputList = new LinkedList<>();
+
+        //if there are numbers bigger that our searchedSum
+        for (int i = 0; i < inputList.size(); i++) {
+            if (inputList.get(i) > searchedSum) {
+                inputList.remove(i);
+                i--;
             }
+        }
 
-            while (sum != number) {
-                Collections.sort(inputListForEveryoneWithEveryone);
+        int sum = 0;
+        while (sum != searchedSum) {
+            Collections.sort(inputList);
 
-                for(int i = 0; i < inputListForEveryoneWithEveryone.size() - 1; i++) {
-                    sum = inputListForEveryoneWithEveryone.getLast() + inputListForEveryoneWithEveryone.get(i);
-                    if (sum == number) {
-                        resultListWithEveryoneWithEveryone.add(inputListForEveryoneWithEveryone.getLast());
-                        resultListWithEveryoneWithEveryone.add(inputListForEveryoneWithEveryone.get(i));
-                        break;
-                    }
-                }
-                inputListForEveryoneWithEveryone.removeLast();
-
-                if(inputListForEveryoneWithEveryone.isEmpty() && resultListWithEveryoneWithEveryone.isEmpty()) {
-                    resultListWithEveryoneWithEveryone.add(0);
+            for(int i = 0; i < inputList.size() - 1; i++) {
+                sum = inputList.getLast() + inputList.get(i);
+                if (sum == searchedSum) {
+                    outputList.add(inputList.getLast());
+                    outputList.add(inputList.get(i));
                     break;
                 }
-
             }
-//            if (resultListWithEveryoneWithEveryone.size() == 0) {
-//                resultList.add(0);
-//                return resultList;
-//            }
-            resultList = resultListWithEveryoneWithEveryone;
-        } else {
-            resultList = resultListWithQuickSearch;
-        }
+            inputList.removeLast();
 
-        return resultList;
+            if(inputList.isEmpty() && outputList.isEmpty()) {
+                outputList.add(0);
+                break;
+            }
+        }
+        return outputList;
     }
 }
