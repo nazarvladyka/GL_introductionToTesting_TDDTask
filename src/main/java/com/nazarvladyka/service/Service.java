@@ -1,6 +1,7 @@
 package com.nazarvladyka.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 
 public class Service {
@@ -10,7 +11,7 @@ public class Service {
         //in case when sum of element are not enough
         int sumOfInputList = 0;
         for (Integer x : inputList) { sumOfInputList += x; }
-        if (sumOfInputList < number) {
+        if (sumOfInputList < number || number == 0) {
             resultList.add(0);
             return resultList;
         }
@@ -50,7 +51,6 @@ public class Service {
                     }
                 }
 
-
                 resultListWithQuickSearch.add(inputListForQuickSearch.get(indexOfElementWithMinDifference));
                 inputListForQuickSearch.remove(indexOfElementWithMinDifference);
                 //add all elements in list to sum
@@ -61,17 +61,49 @@ public class Service {
                 resultListWithQuickSearch.add(0);
             }
         }
-// in case when first method didn`t find needed list
-        if (resultListWithQuickSearch.contains(0)) {
+// in case when first method didn't find needed list
+        if (resultListWithQuickSearch.size() == 1 && resultListWithQuickSearch.contains(0)) {
             LinkedList<Integer> resultListWithEveryoneWithEveryone = new LinkedList<>();
             LinkedList<Integer> inputListForEveryoneWithEveryone = new LinkedList<>(inputList);
 
-            
+            sum = 0;
+            difference = number;
+            //if there are numbers bigger that our number
+            for (int i = 0; i < inputListForEveryoneWithEveryone.size(); i++) {
+                if (inputListForEveryoneWithEveryone.get(i) > number) {
+                    inputListForEveryoneWithEveryone.remove(i);
+                    i--;
+                }
+            }
 
+            while (sum != number) {
+                Collections.sort(inputListForEveryoneWithEveryone);
+
+                for(int i = 0; i < inputListForEveryoneWithEveryone.size() - 1; i++) {
+                    sum = inputListForEveryoneWithEveryone.getLast() + inputListForEveryoneWithEveryone.get(i);
+                    if (sum == number) {
+                        resultListWithEveryoneWithEveryone.add(inputListForEveryoneWithEveryone.getLast());
+                        resultListWithEveryoneWithEveryone.add(inputListForEveryoneWithEveryone.get(i));
+                        break;
+                    }
+                }
+                inputListForEveryoneWithEveryone.removeLast();
+
+                if(inputListForEveryoneWithEveryone.isEmpty() && resultListWithEveryoneWithEveryone.isEmpty()) {
+                    resultListWithEveryoneWithEveryone.add(0);
+                    break;
+                }
+
+            }
+//            if (resultListWithEveryoneWithEveryone.size() == 0) {
+//                resultList.add(0);
+//                return resultList;
+//            }
+            resultList = resultListWithEveryoneWithEveryone;
+        } else {
+            resultList = resultListWithQuickSearch;
         }
 
-
-        resultList = resultListWithQuickSearch;
         return resultList;
     }
 }
