@@ -7,19 +7,26 @@ public class Service {
     public LinkedList<Integer> chooseNumbersFromListEqualsToNumber(LinkedList<Integer> inputList, int searchedSum) {
         LinkedList<Integer> resultList = new LinkedList<>();
 
+        if(inputList.isEmpty()) {
+            throw new IllegalArgumentException("inputList is empty");
+        } else if(searchedSum == 0) {
+            throw new IllegalArgumentException("searchedSum is zero");
+        } else if(searchedSum < 0) {
+            throw new IllegalArgumentException("searchedSum is less than zero");
+        }
+
         //in case when sum of element are not enough
         int sumOfInputList = 0;
         for (Integer x : inputList) { sumOfInputList += x; }
-        if (sumOfInputList < searchedSum || searchedSum == 0) {
+        if (sumOfInputList < searchedSum) {
             resultList.add(0);
             return resultList;
         }
 
         LinkedList<Integer> resultWithQuickSearch = quickSearch(inputList, searchedSum);
-        LinkedList<Integer> resultEveryoneWithEveryone = everyoneWithEveryone(inputList, searchedSum);
 
         if (resultWithQuickSearch.indexOf(0) == 0) {
-            resultList = resultEveryoneWithEveryone;
+            resultList = everyoneWithEveryone(inputList, searchedSum);
         } else {
             resultList = resultWithQuickSearch;
         }
@@ -34,21 +41,21 @@ public class Service {
         int elementIndexClosestToDifference;
         int minDifference = searchedSum;
         int sum = 0;
-        boolean isThereAreNotSmallestNumberThatDifference = false;
+        boolean isThereAreSmallestNumberThatDifference = true;
 
-        while(sum != searchedSum && !isThereAreNotSmallestNumberThatDifference) {
+        while(sum != searchedSum && isThereAreSmallestNumberThatDifference) {
             elementIndexClosestToDifference = 0;
 
             for (Integer x : inputList) {
                 if (x > difference) {
-                    isThereAreNotSmallestNumberThatDifference = true;
+                    isThereAreSmallestNumberThatDifference = false;
                 } else {
-                    isThereAreNotSmallestNumberThatDifference = false;
+                    isThereAreSmallestNumberThatDifference = true;
                     break;
                 }
             }
 
-            if(!isThereAreNotSmallestNumberThatDifference) {
+            if(isThereAreSmallestNumberThatDifference) {
                 for (Integer elem : inputList) {
                     if (minDifference == 0) { break; }
                     if ((difference - elem) < 0) { continue; }

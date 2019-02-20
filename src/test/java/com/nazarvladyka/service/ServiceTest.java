@@ -9,22 +9,6 @@ public class ServiceTest {
 
     private Service unit = new Service();
     private LinkedList<Integer> input;
-    private int number;
-
-    @Test
-    public void when_SearchedSumIsZero_ReturnZero() {
-        input = new LinkedList<Integer>() {{
-            add(4);
-            add(10);
-            add(7);
-        }};
-        number = 0;
-        LinkedList<Integer> expected = new LinkedList<Integer>() {{
-            add(0);
-        }};
-
-        assertEquals(expected, unit.chooseNumbersFromListEqualsToNumber(input, number));
-    }
 
     @Test
     public void when_SearchedSumIsBiggerThanSumOfElements_ReturnZero() {
@@ -33,12 +17,11 @@ public class ServiceTest {
             add(20);
             add(7);
         }};
-        number = 100;
         LinkedList<Integer> expected = new LinkedList<Integer>() {{
             add(0);
         }};
 
-        assertEquals(expected, unit.chooseNumbersFromListEqualsToNumber(input, number));
+        assertEquals(expected, unit.chooseNumbersFromListEqualsToNumber(input, 100));
     }
 
     @Test
@@ -50,13 +33,12 @@ public class ServiceTest {
             add(4);
             add(5);
         }};
-        number = 8;
         LinkedList<Integer> expected = new LinkedList<Integer>() {{
             add(5);
             add(3);
         }};
 
-        assertEquals(expected, unit.chooseNumbersFromListEqualsToNumber(input, number));
+        assertEquals(expected, unit.chooseNumbersFromListEqualsToNumber(input, 8));
     }
 
     @Test
@@ -68,12 +50,11 @@ public class ServiceTest {
             add(1);
             add(3);
         }};
-        number = 17;
         LinkedList<Integer> expected = new LinkedList<Integer>() {{
             add(17);
         }};
 
-        assertEquals(expected, unit.chooseNumbersFromListEqualsToNumber(input, number));
+        assertEquals(expected, unit.chooseNumbersFromListEqualsToNumber(input, 17));
     }
 
     @Test
@@ -90,12 +71,11 @@ public class ServiceTest {
             add(18);
             add(2);
         }};
-        number = 57;
         LinkedList<Integer> expected = new LinkedList<Integer>() {{
             add(0);
         }};
 
-        assertEquals(expected, unit.chooseNumbersFromListEqualsToNumber(input, number));
+        assertEquals(expected, unit.chooseNumbersFromListEqualsToNumber(input, 57));
     }
 
     @Test
@@ -109,12 +89,35 @@ public class ServiceTest {
             add(10);
             add(7);
         }};
-        number = 21;
         LinkedList<Integer> expected = new LinkedList<Integer>() {{
             add(11);
             add(10);
         }};
 
-        assertEquals(expected, unit.chooseNumbersFromListEqualsToNumber(input, number));
+        assertEquals(expected, unit.chooseNumbersFromListEqualsToNumber(input, 21));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void when_ListIsEmpty_ThrowIllegalArgumentException() {
+        input = new LinkedList<>();
+        unit.chooseNumbersFromListEqualsToNumber(input, 1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void when_SearchedSumIsZero_ThrowIllegalArgumentException() {
+        input = new LinkedList<Integer>() {{
+            add(1);
+            add(2);
+        }};
+        unit.chooseNumbersFromListEqualsToNumber(input, 0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void when_SearchedSumIsLessThanZero_ThrowIllegalArgumentException() {
+        input = new LinkedList<Integer>() {{
+            add(1);
+            add(2);
+        }};
+        unit.chooseNumbersFromListEqualsToNumber(input, -1);
     }
 }
