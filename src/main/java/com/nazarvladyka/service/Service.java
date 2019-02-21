@@ -4,7 +4,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 public class Service {
-    public LinkedList<Integer> chooseNumbersFromListEqualsToNumber(LinkedList<Integer> inputList, int searchedSum) {
+    public LinkedList<Integer> chooseNumbersFromListEqualsToNumber(LinkedList<Integer> inputList, int searchedSum)
+            throws IllegalArgumentException {
         LinkedList<Integer> resultList = new LinkedList<>();
 
         if(inputList.isEmpty()) {
@@ -26,7 +27,7 @@ public class Service {
         LinkedList<Integer> resultWithQuickSearch = quickSearch(inputList, searchedSum);
 
         if (resultWithQuickSearch.indexOf(0) == 0) {
-            resultList = everyoneWithEveryone(inputList, searchedSum);
+            resultList = everyoneWithEveryoneSearch(inputList, searchedSum);
         } else {
             resultList = resultWithQuickSearch;
         }
@@ -78,7 +79,7 @@ public class Service {
         return outputList;
     }
 
-    private LinkedList<Integer> everyoneWithEveryone(LinkedList<Integer> inputList, int searchedSum) {
+    private LinkedList<Integer> everyoneWithEveryoneSearch(LinkedList<Integer> inputList, int searchedSum) {
         LinkedList<Integer> outputList = new LinkedList<>();
 
         //if there are numbers bigger that our searchedSum
